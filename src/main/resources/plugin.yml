@@ -1,0 +1,5 @@
+main: com.wheezygold.happyserver.Main
+name: happyserver
+version: 0.1
+author: WheezyGold7931
+description: The main plugin for happyheat's server.

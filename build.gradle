@@ -10,6 +10,7 @@ apply plugin: 'idea'
 dependencies {
     compile group: 'org.spigotmc', name: 'spigot-api', version: "1.8.8-R0.1-SNAPSHOT"
     compile group: 'com.github.JamesJ', name: 'CommandFramework', version: '1.0-SNAPSHOT'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 }
 
 configurations {

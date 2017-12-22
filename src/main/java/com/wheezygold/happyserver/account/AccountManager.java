@@ -1,11 +1,13 @@
 package com.wheezygold.happyserver.account;
 
+import com.wheezygold.happyserver.account.commands.RankCommand;
 import com.wheezygold.happyserver.common.Rank;
 import com.wheezygold.happyserver.common.SQLManager;
 import com.wheezygold.happyserver.common.SmallPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.Connection;
 import java.util.HashMap;
 
 public class AccountManager extends SmallPlugin {
@@ -18,13 +20,21 @@ public class AccountManager extends SmallPlugin {
         this.sqlManager = sqlManager;
     }
 
+    @Override
+    public void addCommands() {
+        addCommand(new RankCommand(this));
+    }
+
     public boolean addPlayer(Player player) {
         if (activePlayers.containsKey(player.getName())) {
             activePlayers.remove(player.getName());
         }
-        HappyPlayer newPlayer = new HappyPlayer(player);
+        HappyPlayer newPlayer = new HappyPlayer(player, this);
         if (!sqlManager.isActive(player.getUniqueId().toString())) {
-            sqlManager.createUser(player.getUniqueId().toString(), player.getName());
+            if (!sqlManager.createUser(player.getUniqueId().toString(), player.getName())) {
+                log("Not able to create user!");
+                return false;
+            }
         }
         try {
             newPlayer.setRank(Rank.valueOf(sqlManager.getRank(player.getUniqueId().toString())));
@@ -32,6 +42,7 @@ public class AccountManager extends SmallPlugin {
             log("Invalid rank at user: " + player.getName());
             return false;
         }
+        newPlayer.setTokens(sqlManager.getTokens(player.getUniqueId().toString()));
         activePlayers.put(player.getName(), newPlayer);
         return true;
     }
@@ -49,6 +60,14 @@ public class AccountManager extends SmallPlugin {
 
     public HappyPlayer fetch(String playerName) {
         return activePlayers.get(playerName);
+    }
+
+    public void update(HappyPlayer target) {
+        sqlManager.updateUser(target);
+    }
+
+    public Connection getConnection() {
+        return sqlManager.connection;
     }
 
 }

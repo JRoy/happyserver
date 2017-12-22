@@ -64,7 +64,7 @@ public abstract class SmallPlugin implements Listener {
 
     public void disable() { }
 
-    public void addCommands() { }
+    public void addCommands() {  }
 
     public void log(String info) {
         Bukkit.getLogger().info(D.M(this.moduleName, info));

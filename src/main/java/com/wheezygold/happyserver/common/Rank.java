@@ -8,13 +8,14 @@ import org.bukkit.ChatColor;
 public enum Rank {
 
     OWNER("Owner", "&e&lOwner", "264560287183667202", 100),
-    DEV("Developer", "&d&lDeveloper", "317386352763207702", 90),
-    MANAGER("Channel Manager", "&4&lManager", "368172637182230549", 35),
+    DEV("Developer", "&d&lDeveloper", "317386352763207702", 100),
+    MANAGER("Channel Manager", "&4&lManager", "368172637182230549", 100),
     SADMIN("Super Admin", "&1&lS.Admin", "317386352763207702", 30),
     ADMIN("Admin", "&9&lAdmin", "295673671203291147", 25),
     MOD("Moderator", "&2&lMod", "264964563517046784", 20),
     HELPER("Helper", "&b&lHelper", "264965005949009920", 15),
     PATRON("Patron Boys", "&6&lPatron", "300081997878132736", 10),
+    SUPPORTER("Supporter", "&a&lSupporter", "294583863521312770", 10),
     OG("OG", "&c&lOG", "350986983004307456", 5),
     NONE("No Rank", "", "264964418796781568", 0);
 
@@ -59,7 +60,7 @@ public enum Rank {
         return null;
     }
 
-    public static String perm(Rank rank) {
-        return D.M("Permissions", "This requires Permission Rank [" + Color.cBlue + rank.getName().toUpperCase() + Color.cGray + "].");
+    public String permMsg() {
+        return D.M("Permissions", "This requires Permission Rank [" + Color.cBlue + name + Color.cAqua + "].");
     }
 }

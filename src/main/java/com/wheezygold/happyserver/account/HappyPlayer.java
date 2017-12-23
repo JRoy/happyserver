@@ -1,6 +1,7 @@
 package com.wheezygold.happyserver.account;
 
 import com.wheezygold.happyserver.common.Rank;
+import com.wheezygold.happyserver.common.SubRank;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -12,6 +13,7 @@ public class HappyPlayer {
     private String playerName;
     private Player player;
     private Rank rank;
+    private SubRank subRank;
     private int tokens;
 
     HappyPlayer(Player player, AccountManager accountManager) {
@@ -21,6 +23,7 @@ public class HappyPlayer {
         this.accountManager = accountManager;
     }
 
+    @Deprecated
     public HappyPlayer(String playerName, AccountManager accountManager) {
         this.playerName = playerName;
     }
@@ -48,6 +51,15 @@ public class HappyPlayer {
 
     public HappyPlayer setRank(Rank rank) {
         this.rank = rank;
+        return this;
+    }
+
+    public SubRank getSubRank() {
+        return subRank;
+    }
+
+    public HappyPlayer setSubRank(SubRank subRank) {
+        this.subRank = subRank;
         return this;
     }
 

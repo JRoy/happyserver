@@ -50,11 +50,16 @@ public class Chat extends SmallPlugin implements Listener {
         event.setMessage(event.getMessage());
 
         String rankDisplay = happyPlayer.getRank().getPrefix();
+        String subrankDisplay = happyPlayer.getSubRank().getPrefix();
+
+        if (!subrankDisplay.isEmpty() && happyPlayer.getSubRank().getPower() != 0) {
+            subrankDisplay = Color.cAqua + "[" + subrankDisplay + Color.cAqua + "] ";
+        }
 
         if (!rankDisplay.isEmpty() && happyPlayer.getRank().getPower() != 0)
             rankDisplay = rankDisplay + " ";
 
-        event.setFormat(rankDisplay + Color.cYellow + senderName + " " + Color.cWhite + "%2$s");
+        event.setFormat(subrankDisplay + rankDisplay + Color.cYellow + senderName + " " + Color.cWhite + "%2$s");
 
         lastMessages.put(sender, event.getMessage());
 

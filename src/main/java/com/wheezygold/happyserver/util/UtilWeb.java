@@ -27,7 +27,7 @@ public class UtilWeb {
     }
 
     public static JSONObject getJSONResponse(String urlString) {
-        Unirest.setTimeouts(1500, 2000);
+        Unirest.setTimeouts(2000, 2500);
         try {
             return Unirest.get(urlString).asJsonAsync().get().getBody().getObject();
         } catch (InterruptedException | ExecutionException e) {

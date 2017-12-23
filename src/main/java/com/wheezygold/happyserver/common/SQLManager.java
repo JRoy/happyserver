@@ -8,11 +8,12 @@ import java.sql.*;
 @SuppressWarnings("FieldCanBeLocal")
 public class SQLManager extends SmallPlugin {
 
-    private String CREATE_A_TABLE = "CREATE TABLE IF NOT EXISTS `accounts` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `uuid` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL , `name` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL , `tokens` INT(11) NOT NULL DEFAULT '0' , `rank` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'NONE' , UNIQUE (`id`)) ENGINE = InnoDB;";
+    private String CREATE_A_TABLE = "CREATE TABLE IF NOT EXISTS `accounts` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `uuid` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL , `name` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL , `tokens` INT(11) NOT NULL DEFAULT '0' , `rank` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'NONE' , `subrank` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'NONE' , UNIQUE (`id`)) ENGINE = InnoDB;";
     private String CREATE_USER = "INSERT INTO accounts (uuid, name) VALUES (?, ?);";
     private String UPDATE_NAME = "UPDATE accounts SET name = ? WHERE uuid = ?;";
     private String UPDATE_TOKENS = "UPDATE accounts SET tokens = ? WHERE uuid = ?;";
     private String UPDATE_RANK = "UPDATE accounts SET rank = ? WHERE uuid = ?;";
+    private String UPDATE_SUBRANK = "UPDATE accounts SET subrank = ? WHERE uuid = ?;";
 
     private String CREATE_LINK_TABLE = "";
 
@@ -92,6 +93,19 @@ public class SQLManager extends SmallPlugin {
         }
     }
 
+    public String getSubRank(String uuid) {
+        try {
+            ResultSet result = connection.createStatement().executeQuery("SELECT subrank FROM accounts WHERE uuid = '" + uuid + "';");
+            if (result.next())
+                return result.getString(1);
+            return null;
+        } catch (SQLException e) {
+            log("Error while loading user: " + e.getMessage());
+            connectH();
+            return null;
+        }
+    }
+
     public int getTokens(String uuid) {
         try {
             ResultSet result = connection.createStatement().executeQuery("SELECT tokens FROM accounts WHERE uuid = '" + uuid + "';");
@@ -116,9 +130,13 @@ public class SQLManager extends SmallPlugin {
             PreparedStatement rS = connection.prepareStatement(UPDATE_RANK);
             rS.setString(1, user.getRank().name());
             rS.setString(2, user.getUuid().toString());
+            PreparedStatement srS = connection.prepareStatement(UPDATE_SUBRANK);
+            srS.setString(1, user.getSubRank().name());
+            srS.setString(2, user.getUuid().toString());
             nS.execute();
             tS.execute();
             rS.execute();
+            srS.execute();
         } catch (SQLException e) {
             connectH();
             e.printStackTrace();

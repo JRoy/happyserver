@@ -11,6 +11,7 @@ import com.wheezygold.happyserver.Chat;
 import com.wheezygold.happyserver.account.AccountManager;
 import com.wheezygold.happyserver.account.HappyPlayer;
 import com.wheezygold.happyserver.commands.*;
+import com.wheezygold.happyserver.commands.fun.SmiteCommand;
 import com.wheezygold.happyserver.common.Happyboard;
 import com.wheezygold.happyserver.common.Rank;
 import com.wheezygold.happyserver.common.SQLManager;
@@ -75,7 +76,7 @@ public class HubManager extends SmallPlugin implements Listener {
         if (sqlManager == null)
             sqlManager = new SQLManager(plugin);
         if (accountManager == null)
-            accountManager = new AccountManager(sqlManager, plugin);
+            accountManager = new AccountManager(this, sqlManager, plugin);
         if (chatManager == null)
             chatManager = new Chat(plugin, accountManager);
         if (disguiseManager == null) {
@@ -91,12 +92,33 @@ public class HubManager extends SmallPlugin implements Listener {
         addCommand(new BroadcastCommand(accountManager));
         addCommand(new FlyCommand(accountManager));
         addCommand(new StaffChatCommand(accountManager));
+        addCommand(new SmiteCommand(accountManager));
     }
 
     @EventHandler
     private void onPing(ServerListPingEvent event) {
         event.setMotd(Color.cYellow + Color.Bold + "happyserver 0.1");
         event.setMaxPlayers(event.getNumPlayers() + 1);
+    }
+
+    public void updateSb(HappyPlayer happyPlayer) {
+
+        activeBoards.get(happyPlayer.getPlayer().getName()).reset();
+        activeBoards.remove(happyPlayer.getPlayer().getName());
+
+        Happyboard happyboard = new Happyboard(Color.cYellow + Color.Bold + "happyserver");
+
+        happyboard.blankLine(15);
+        happyboard.add(Color.cYellow + "Rank", 14);
+        happyboard.add(Color.cPurple + happyPlayer.getRank().getName(), 13);
+        happyboard.blankLine(12);
+        happyboard.add(Color.cYellow + "Tokens", 11);
+        happyboard.add(Color.cPurple + String.valueOf(happyPlayer.getTokens()), 10);
+        happyboard.build();
+        happyboard.send(happyPlayer.getPlayer());
+
+        activeBoards.put(happyPlayer.getPlayer().getName(), happyboard);
+
     }
 
     @EventHandler
@@ -152,8 +174,6 @@ public class HubManager extends SmallPlugin implements Listener {
         happyboard.send(event.getPlayer());
 
         activeBoards.put(event.getPlayer().getName(), happyboard);
-
-
     }
 
     @EventHandler

@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+@ICommand.PlayerOnly
 public class StaffChatCommand extends ICommand {
 
     private AccountManager accountManager;

@@ -11,9 +11,11 @@ import com.wheezygold.happyserver.Chat;
 import com.wheezygold.happyserver.account.AccountManager;
 import com.wheezygold.happyserver.account.HappyPlayer;
 import com.wheezygold.happyserver.commands.*;
+import com.wheezygold.happyserver.common.Happyboard;
 import com.wheezygold.happyserver.common.Rank;
 import com.wheezygold.happyserver.common.SQLManager;
 import com.wheezygold.happyserver.common.SmallPlugin;
+import com.wheezygold.happyserver.disguise.DisguiseManager;
 import com.wheezygold.happyserver.util.Color;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
@@ -35,14 +37,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 public class HubManager extends SmallPlugin implements Listener {
 
     private JavaPlugin plugin;
     private AccountManager accountManager = null;
     private Chat chatManager = null;
     private SQLManager sqlManager = null;
+    private DisguiseManager disguiseManager = null;
+
+    private HashMap<String, Happyboard> activeBoards = new HashMap<>();
 
     public HubManager(JavaPlugin plugin) {
         super("Hub Manager", plugin);
@@ -62,7 +69,6 @@ public class HubManager extends SmallPlugin implements Listener {
                 event.getPacket().getServerPings().read(0).setVersionName("happyserver");
             }
         });
-//        new DisguiseFactory(plugin);
     }
 
     private void loadModules() {
@@ -72,6 +78,9 @@ public class HubManager extends SmallPlugin implements Listener {
             accountManager = new AccountManager(sqlManager, plugin);
         if (chatManager == null)
             chatManager = new Chat(plugin, accountManager);
+        if (disguiseManager == null) {
+            disguiseManager = new DisguiseManager(plugin);
+        }
         loadGeneralCommands();
     }
 
@@ -128,6 +137,23 @@ public class HubManager extends SmallPlugin implements Listener {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
+
+        int curLine = 15;
+
+        Happyboard happyboard = new Happyboard(Color.cYellow + Color.Bold + "happyserver");
+
+        happyboard.blankLine(15);
+        happyboard.add(Color.cYellow + "Rank", 14);
+        happyboard.add(Color.cPurple + happyPlayer.getRank().getName(), 13);
+        happyboard.blankLine(12);
+        happyboard.add(Color.cYellow + "Tokens", 11);
+        happyboard.add(Color.cPurple + String.valueOf(happyPlayer.getTokens()), 10);
+        happyboard.build();
+        happyboard.send(event.getPlayer());
+
+        activeBoards.put(event.getPlayer().getName(), happyboard);
+
+
     }
 
     @EventHandler

@@ -7,6 +7,7 @@ import me.jamesj.icommandframework.ICommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+@ICommand.PlayerOnly
 public class FlyCommand extends ICommand {
 
     private AccountManager accountManager;

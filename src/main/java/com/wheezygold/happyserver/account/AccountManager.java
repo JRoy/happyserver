@@ -12,12 +12,14 @@ import java.util.HashMap;
 
 public class AccountManager extends SmallPlugin {
 
+    private static AccountManager instance;
     private SQLManager sqlManager;
     private HashMap<String, HappyPlayer> activePlayers = new HashMap<>();
 
     public AccountManager(SQLManager sqlManager, JavaPlugin plugin) {
         super("Account Manager", plugin);
         this.sqlManager = sqlManager;
+        instance = this;
     }
 
     @Override
@@ -68,6 +70,10 @@ public class AccountManager extends SmallPlugin {
 
     public Connection getConnection() {
         return sqlManager.connection;
+    }
+
+    public static AccountManager getInstance() {
+        return instance;
     }
 
 }

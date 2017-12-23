@@ -8,6 +8,7 @@ import me.jamesj.icommandframework.ICommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+@ICommand.PlayerOnly
 public class SilenceCommand extends ICommand {
 
     private AccountManager accountManager;

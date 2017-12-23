@@ -12,7 +12,7 @@ public class UtilTime {
         } else if (diff >= 60) {
             result = diff / 60 + " Minutes";
         } else {
-            result = diff + "Seconds";
+            result = diff + " Seconds";
         }
 
         return result;

@@ -63,7 +63,8 @@ public class Chat extends SmallPlugin implements Listener {
     @EventHandler
     public void pingCommand(PlayerCommandPreprocessEvent event) {
         if (event.getMessage().equalsIgnoreCase("/ping")) {
-            event.getPlayer().sendMessage(D.M("Ping", "Frickin Pong!"));
+            event.getPlayer().sendMessage(D.M("Ping", "Get Frickin Ping Ponged!"));
+            event.setCancelled(true);
         }
     }
 
